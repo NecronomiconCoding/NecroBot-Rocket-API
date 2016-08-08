@@ -14,7 +14,9 @@ namespace PokemonGo.RocketAPI.HttpClient
         private static readonly HttpClientHandler Handler = new HttpClientHandler
         {
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
-            AllowAutoRedirect = false
+            AllowAutoRedirect = false,
+            UseProxy = Client.Proxy != null,
+            Proxy = Client.Proxy
         };
 
         public PokemonHttpClient() : base(new RetryHandler(Handler))
@@ -25,5 +27,6 @@ namespace PokemonGo.RocketAPI.HttpClient
             DefaultRequestHeaders.TryAddWithoutValidation("Accept", "*/*");
             DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/x-www-form-urlencoded");
         }
+
     }
 }

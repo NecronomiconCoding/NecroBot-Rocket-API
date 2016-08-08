@@ -20,6 +20,8 @@ namespace PokemonGo.RocketAPI
 {
     public class Client
     {
+        internal static WebProxy Proxy = null;
+
         public Rpc.Login Login;
         public Rpc.Player Player;
         public Rpc.Download Download;
@@ -39,7 +41,7 @@ namespace PokemonGo.RocketAPI
 
         public AuthType AuthType => Settings.AuthType;
 
-        internal readonly PokemonHttpClient PokemonHttpClient = new PokemonHttpClient();
+        internal readonly PokemonHttpClient PokemonHttpClient;
         internal string ApiUrl { get; set; }
         internal AuthTicket AuthTicket { get; set; }
 
@@ -47,6 +49,10 @@ namespace PokemonGo.RocketAPI
         {
             Settings = settings;
             ApiFailure = apiFailureStrategy;
+
+            SetProxy(settings);
+
+            PokemonHttpClient = new PokemonHttpClient();
 
             Login = new Rpc.Login(this);
             Player = new Rpc.Player(this);
@@ -58,6 +64,30 @@ namespace PokemonGo.RocketAPI
             Misc = new Rpc.Misc(this);
 
             Player.SetCoordinates(Settings.DefaultLatitude, Settings.DefaultLongitude, Settings.DefaultAltitude);
+        }
+
+        private void SetProxy(ISettings settings)
+        {
+            if (settings.UseProxy && !string.IsNullOrWhiteSpace(settings.UseProxyHost) && !string.IsNullOrWhiteSpace(settings.UseProxyPort))
+            {
+                var proxyHost = settings.UseProxyHost;
+                if (!proxyHost.StartsWith("http://") && !proxyHost.StartsWith("https://"))
+                {
+                    proxyHost = "http://" + proxyHost;
+                }
+                int proxyPort;
+                if (int.TryParse(settings.UseProxyPort, out proxyPort))
+                {
+                    proxyHost = proxyHost + ":" + proxyPort;
+                }
+                Proxy = new WebProxy(proxyHost, false);
+
+                if (settings.UseProxyAuthentication && !string.IsNullOrWhiteSpace(settings.UseProxyUsername) &&
+                    !string.IsNullOrWhiteSpace(settings.UseProxyPassword))
+                {
+                    Proxy.Credentials = new NetworkCredential { UserName = settings.UseProxyUsername, Password = settings.UseProxyPassword };
+                }
+            }
         }
     }
 }
