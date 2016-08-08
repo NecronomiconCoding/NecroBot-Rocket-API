@@ -22,22 +22,12 @@ namespace PokemonGo.RocketAPI.Login
         }
         public async Task<string> GetAccessToken()
         {
-            if (_settings.UseProxy)
-            {
-                var ProxyString = _settings.UseProxyHost.Contains("http://") ? $"{_settings.UseProxyHost}:{_settings.UseProxyPassword}" : $"http://{_settings.UseProxyHost}:{_settings.UseProxyPassword}";
-                _proxy = new WebProxy(ProxyString);
-            }
-            
-
-            if (_settings.UseProxyAuthentication)
-                _proxy.Credentials = new NetworkCredential(_settings.UseProxyUsername, _settings.UseProxyPassword);
-
             var handler = new HttpClientHandler
             {
-                UseProxy = _settings.UseProxy,
-                Proxy = _proxy,    
                 AutomaticDecompression = DecompressionMethods.GZip,
-                AllowAutoRedirect = false
+                AllowAutoRedirect = false,
+                UseProxy = Client.Proxy != null,
+                Proxy = Client.Proxy
             };
 
             using (var tempHttpClient = new System.Net.Http.HttpClient(handler))
