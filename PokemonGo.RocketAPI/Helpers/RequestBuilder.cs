@@ -141,7 +141,7 @@ namespace PokemonGo.RocketAPI.Helpers
             return output;
         }
 
-        [DllImport("encrypt.dll", EntryPoint = "encrypt", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("Resources/encrypt.dll", EntryPoint = "encrypt", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         static extern private void EncryptNative(IntPtr arr, int length, byte[] iv, int ivsize, IntPtr output, out int outputSize);
         [DllImport("kernel32.dll", EntryPoint = "RtlFillMemory", SetLastError = false)]
         static extern void FillMemory(IntPtr destination, uint length, byte fill);
