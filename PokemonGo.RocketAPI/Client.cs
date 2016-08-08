@@ -37,7 +37,7 @@ namespace PokemonGo.RocketAPI
         {
             Settings = settings;
             ApiFailure = apiFailureStrategy;
-            InitProxy(settings);
+            Proxy = InitProxy();
             PokemonHttpClient = new PokemonHttpClient();
             Login = new Rpc.Login(this);
             Player = new Rpc.Player(this);
@@ -51,16 +51,16 @@ namespace PokemonGo.RocketAPI
             Player.SetCoordinates(Settings.DefaultLatitude, Settings.DefaultLongitude, Settings.DefaultAltitude);
         }
 
-        private void InitProxy(ISettings settings)
+        private WebProxy InitProxy()
         {
-            int port;
-            if (!settings.UseProxy || string.IsNullOrWhiteSpace(settings.UseProxyHost) || string.IsNullOrWhiteSpace(settings.UseProxyPort) || !int.TryParse(settings.UseProxyPort, out port)) return;
-            var proxyString = settings.UseProxyHost.Contains("http://") ? $"{settings.UseProxyHost}:{settings.UseProxyPort}" : $"http://{settings.UseProxyHost}:{settings.UseProxyPort}";
-            Proxy = new WebProxy(proxyString);
+            if (!Settings.UseProxy) return null;
 
-            if (settings.UseProxyAuthentication && !string.IsNullOrWhiteSpace(settings.UseProxyUsername) && !string.IsNullOrWhiteSpace(settings.UseProxyPassword))
-                Proxy.Credentials = new NetworkCredential(settings.UseProxyUsername, settings.UseProxyPassword);
+            WebProxy prox = new WebProxy(new System.Uri($"http://{Settings.UseProxyHost}:{Settings.UseProxyPort}"), false, null);
 
+            if (Settings.UseProxyAuthentication)
+                prox.Credentials = new NetworkCredential(Settings.UseProxyUsername, Settings.UseProxyPassword);
+
+            return prox;
         }
     }
 }
