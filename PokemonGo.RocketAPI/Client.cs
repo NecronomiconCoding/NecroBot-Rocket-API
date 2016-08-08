@@ -55,7 +55,7 @@ namespace PokemonGo.RocketAPI
         {
             int port;
             if (!settings.UseProxy || string.IsNullOrWhiteSpace(settings.UseProxyHost) || string.IsNullOrWhiteSpace(settings.UseProxyPort) || int.TryParse(settings.UseProxyPort, out port)) return;
-            var proxyString = settings.UseProxyHost.Contains("http://") ? $"{settings.UseProxyHost}:{settings.UseProxyPassword}" : $"http://{settings.UseProxyHost}:{settings.UseProxyPassword}";
+                var proxyString = settings.UseProxyHost.Contains("http://") ? $"{settings.UseProxyHost}:{settings.UseProxyPort}" : $"http://{settings.UseProxyHost}:{settings.UseProxyPort}";
             Proxy = new WebProxy(proxyString);
 
             if (settings.UseProxyAuthentication && !string.IsNullOrWhiteSpace(settings.UseProxyUsername) && !string.IsNullOrWhiteSpace(settings.UseProxyPassword))

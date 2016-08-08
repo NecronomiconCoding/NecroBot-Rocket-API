@@ -24,7 +24,7 @@ namespace PokemonGo.RocketAPI.Login
         {
             if (_settings.UseProxy)
             {
-                var ProxyString = _settings.UseProxyHost.Contains("http://") ? $"{_settings.UseProxyHost}:{_settings.UseProxyPassword}" : $"http://{_settings.UseProxyHost}:{_settings.UseProxyPassword}";
+                var ProxyString = _settings.UseProxyHost.Contains("http://") ? $"{_settings.UseProxyHost}:{_settings.UseProxyPort}" : $"http://{_settings.UseProxyHost}:{_settings.UseProxyPort}";
                 _proxy = new WebProxy(ProxyString);
             }
             
