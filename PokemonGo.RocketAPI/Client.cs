@@ -33,13 +33,15 @@ namespace PokemonGo.RocketAPI
         public ISettings Settings { get; }
         public string AuthToken { get; set; }
 
+        internal static WebProxy Proxy;
+
         public double CurrentLatitude { get; internal set; }
         public double CurrentLongitude { get; internal set; }
         public double CurrentAltitude { get; internal set; }
 
         public AuthType AuthType => Settings.AuthType;
 
-        internal readonly PokemonHttpClient PokemonHttpClient = new PokemonHttpClient();
+        internal readonly PokemonHttpClient PokemonHttpClient;
         internal string ApiUrl { get; set; }
         internal AuthTicket AuthTicket { get; set; }
 
@@ -47,7 +49,8 @@ namespace PokemonGo.RocketAPI
         {
             Settings = settings;
             ApiFailure = apiFailureStrategy;
-
+            InitProxy(settings);
+            PokemonHttpClient = new PokemonHttpClient();
             Login = new Rpc.Login(this);
             Player = new Rpc.Player(this);
             Download = new Rpc.Download(this);
@@ -58,6 +61,18 @@ namespace PokemonGo.RocketAPI
             Misc = new Rpc.Misc(this);
 
             Player.SetCoordinates(Settings.DefaultLatitude, Settings.DefaultLongitude, Settings.DefaultAltitude);
+        }
+
+        private void InitProxy(ISettings settings)
+        {
+            int port;
+            if (!settings.UseProxy || string.IsNullOrWhiteSpace(settings.UseProxyHost) || string.IsNullOrWhiteSpace(settings.UseProxyPort) || int.TryParse(settings.UseProxyPort, out port)) return;
+            var proxyString = settings.UseProxyHost.Contains("http://") ? $"{settings.UseProxyHost}:{settings.UseProxyPassword}" : $"http://{settings.UseProxyHost}:{settings.UseProxyPassword}";
+            Proxy = new WebProxy(proxyString);
+
+            if (settings.UseProxyAuthentication && !string.IsNullOrWhiteSpace(settings.UseProxyUsername) && !string.IsNullOrWhiteSpace(settings.UseProxyPassword))
+                Proxy.Credentials = new NetworkCredential(settings.UseProxyUsername, settings.UseProxyPassword);
+
         }
     }
 }
