@@ -138,6 +138,8 @@ namespace PokemonGo.RocketAPI.Helpers
             }
             var output = new byte[outputLength];
             Marshal.Copy(ptrOutput, output, 0, outputLength);
+            Marshal.FreeHGlobal(ptr);
+            Marshal.FreeHGlobal(ptrOutput);
             return output;
         }
 
