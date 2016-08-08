@@ -38,7 +38,7 @@ namespace PokemonGo.RocketAPI
             Settings = settings;
             ApiFailure = apiFailureStrategy;
             InitProxy(settings);
-            PokemonHttpClient = new PokemonHttpClient();
+            PokemonHttpClient = new PokemonHttpClient(settings);
             Login = new Rpc.Login(this);
             Player = new Rpc.Player(this);
             Download = new Rpc.Download(this);
@@ -54,9 +54,8 @@ namespace PokemonGo.RocketAPI
         private void InitProxy(ISettings settings)
         {
             int port;
-            if (!settings.UseProxy || string.IsNullOrWhiteSpace(settings.UseProxyHost) || string.IsNullOrWhiteSpace(settings.UseProxyPort) || int.TryParse(settings.UseProxyPort, out port)) return;
-                var proxyString = settings.UseProxyHost.Contains("http://") ? $"{settings.UseProxyHost}:{settings.UseProxyPort}" : $"http://{settings.UseProxyHost}:{settings.UseProxyPort}";
-            Proxy = new WebProxy(proxyString);
+            
+            Proxy = new WebProxy(settings.UseProxyHost, settings.UseProxyPort);
 
             if (settings.UseProxyAuthentication && !string.IsNullOrWhiteSpace(settings.UseProxyUsername) && !string.IsNullOrWhiteSpace(settings.UseProxyPassword))
                 Proxy.Credentials = new NetworkCredential(settings.UseProxyUsername, settings.UseProxyPassword);

@@ -29,7 +29,7 @@ namespace PokemonGo.RocketAPI
         bool UseProxy { get; set; }
         bool UseProxyAuthentication { get; set; }
         string UseProxyHost { get; set; }
-        string UseProxyPort { get; set; }
+        int UseProxyPort { get; set; }
         string UseProxyUsername { get; set; }
         string UseProxyPassword { get; set; }
     }

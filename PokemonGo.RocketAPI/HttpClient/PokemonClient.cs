@@ -14,7 +14,7 @@ namespace PokemonGo.RocketAPI.HttpClient
             Proxy = Client.Proxy
         };
 
-        public PokemonHttpClient() : base(new RetryHandler(Handler))
+        public PokemonHttpClient(ISettings settings) : base(new RetryHandler(Handler))
         {
             DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Niantic App");
             DefaultRequestHeaders.ExpectContinue = false;
