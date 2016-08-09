@@ -21,7 +21,7 @@ namespace PokemonGo.RocketAPI
         public ISettings Settings { get; }
         public string AuthToken { get; set; }
 
-        internal static WebProxy Proxy;
+        public static WebProxy Proxy;
 
         public double CurrentLatitude { get; internal set; }
         public double CurrentLongitude { get; internal set; }
