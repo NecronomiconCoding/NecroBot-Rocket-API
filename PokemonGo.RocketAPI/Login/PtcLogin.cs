@@ -40,11 +40,13 @@ namespace PokemonGo.RocketAPI.Login
                 var ticketId = await GetLoginTicket(username, password, tempHttpClient, sessionData).ConfigureAwait(false);
 
                 //Get tokenvar
-                return await GetToken(tempHttpClient, ticketId).ConfigureAwait(false);
+                var authToken = await GetToken(tempHttpClient, ticketId).ConfigureAwait(false);
+                if (authToken == null) throw new PtcOfflineException();
+                return authToken;
             }
         }
 
-        private static string ExtracktTicketFromResponse(HttpResponseMessage loginResp)
+        private static string ExtractTicketFromResponse(HttpResponseMessage loginResp)
         {
             var location = loginResp.Headers.Location;
             if (location == null)
@@ -87,7 +89,7 @@ namespace PokemonGo.RocketAPI.Login
                 loginResp = await tempHttpClient.PostAsync(Resources.PtcLoginUrl, formUrlEncodedContent).ConfigureAwait(false);
             }
 
-            var ticketId = ExtracktTicketFromResponse(loginResp);
+            var ticketId = ExtractTicketFromResponse(loginResp);
             return ticketId;
         }
 
