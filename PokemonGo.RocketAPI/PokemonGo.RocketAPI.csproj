@@ -210,6 +210,10 @@
       <Project>{a03a7bb2-4f0b-467b-84b2-9a76e6aae6fb}</Project>
       <Name>POGOProtos</Name>
     </ProjectReference>
+    <ProjectReference Include="..\pokemongo-encrypt-sharp\PokemonGoEncryptSharp\PokemonGoEncryptSharp\PokemonGoEncryptSharp.csproj">
+      <Project>{902b446c-0fed-4d82-a467-d9d8d454c110}</Project>
+      <Name>PokemonGoEncryptSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

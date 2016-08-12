@@ -123,7 +123,7 @@ namespace PokemonGo.RocketAPI.Helpers
         {
             byte[] iv = new byte[32];
             new Random().NextBytes(iv);
-            PokemonGoEncryptSharp.Util.Encrypt(bytes, iv);
+            return PokemonGoEncryptSharp.Util.Encrypt(bytes, iv);
         }
 
         public RequestEnvelope GetRequestEnvelope(params Request[] customRequests)
