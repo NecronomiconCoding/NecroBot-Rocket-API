@@ -27,7 +27,16 @@ namespace PokemonGo.RocketAPI.Login
 #pragma warning restore 1998
         {
             var client = new GPSOAuthClient(email, password);
-            var response = client.PerformMasterLogin();
+            Dictionary<string, string> response = null;
+            try
+            {
+                response = client.PerformMasterLogin();
+            }
+            catch (NullReferenceException)
+            {
+                //Fix NullReferenceException in PerformMasterLogin
+                throw new InvalidResponseException();
+            };
 
             if (response.ContainsKey("Error"))
                 throw new GoogleException(response["Error"]);
